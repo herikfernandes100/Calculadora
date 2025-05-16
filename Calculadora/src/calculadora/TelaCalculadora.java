@@ -12,10 +12,13 @@ public class TelaCalculadora extends JFrame{
     private JTextField jtxVisor;
     private String[] simbolos = {"AC/C","+/-","%","RAIZ Q","/","7","8","9","x^Y","*","4","5","6","x^2","-","1","2","3","x^3","+","0",".","X!","10^X","="};
     private JButton[] jbBotoes;
-    private boolean digitandoNovoNumero = true;
+    // Atributos para calcular
+    private boolean operadorDigitado = false;
+    private String valorString ="";
     private double valor1 = 0;
     private double valor2 = 0;
     private String operador = "";
+
    
     
     public TelaCalculadora(){
@@ -85,7 +88,11 @@ public class TelaCalculadora extends JFrame{
         jbBotoes[3].addActionListener(e->{ // RAIZ Q
 
         });
-        jbBotoes[4].addActionListener(e-> adicionarDigito("/"));
+        jbBotoes[4].addActionListener(e-> { // /
+            operador = "/";
+            valor1 = Double.parseDouble(valorString)
+            adicionarDigito("/")
+        });
         jbBotoes[5].addActionListener(e-> adicionarDigito("7"));
         jbBotoes[6].addActionListener(e-> adicionarDigito("8"));
         jbBotoes[7].addActionListener(e-> adicionarDigito("9"));
