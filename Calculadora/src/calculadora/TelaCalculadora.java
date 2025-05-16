@@ -44,22 +44,24 @@ public class TelaCalculadora extends JFrame{
         
         // ------ Painel Principal ------ 
         painel.setLayout(new BorderLayout());
-        painel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        painel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10)); // Bordas
+        
         
         // ------ Painel Visor ------ 
+        painelVisor.setLayout(new BorderLayout());
+        painelVisor.setBorder(BorderFactory.createEmptyBorder(0,0,10,0)); // Borda inferior
         jtxVisor.setFont(new Font("Arial", Font.PLAIN, 24));
-        jtxVisor.setHorizontalAlignment(JTextField.RIGHT);
+        jtxVisor.setHorizontalAlignment(JTextField.RIGHT); // Alinha os numeros a direita
         jtxVisor.setEditable(false);
-        painelVisor.add(jtxVisor);
+        painelVisor.add(jtxVisor, BorderLayout.CENTER);
         painel.add(painelVisor, BorderLayout.NORTH);
+        
         
         // ------ Painel Botões ------ 
         painelBotoes.setLayout(new GridLayout(5,5,3,3));
-        for(int i=0; i<25; i++){
-            painelBotoes.add(jbBotoes[i]);
-        }
-        for(int i=0; i<25;i++){
-            jbBotoes[i].setFont(new Font("Arial", Font.PLAIN, 18));
+        for(int i=0; i<25; i++){ 
+            painelBotoes.add(jbBotoes[i]); // Adiciona jbBotoes ao painelBotoes
+            jbBotoes[i].setFont(new Font("Arial", Font.PLAIN, 18)); // Define a fonte
         }
         painel.add(painelBotoes,BorderLayout.CENTER);
        
