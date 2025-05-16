@@ -1,8 +1,8 @@
 package calculadora;
 
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.*;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class TelaCalculadora extends JFrame{
     
@@ -19,7 +19,7 @@ public class TelaCalculadora extends JFrame{
         // Paineis
         painel = new JPanel(); // Painel
         painelBotoes = new JPanel(); // Painel dos Botões
-        painelVisor = new JPanel(); // Painel do Visor
+        painelVisor = new JPanel(); 
         // Botões
         jbBotoes = new JButton[25];
         for(int i=0; i<25; i++){
@@ -33,31 +33,36 @@ public class TelaCalculadora extends JFrame{
     public void configurarJanela(){
         setVisible(true);
         setTitle("Calculadora");
-        setSize(400,400);
+        setSize(500,350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        setLocation(400,100);
+        setLocation(1200,100);
         add(painel);
         configurarPainel();
     }
     public void configurarPainel(){
         
-        // Painel Visor
-        painelVisor.setLayout(new FlowLayout(FlowLayout.RIGHT));
-        jtxVisor.setColumns(25);
+        // ------ Painel Principal ------ 
+        painel.setLayout(new BorderLayout());
+        painel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
+        
+        // ------ Painel Visor ------ 
+        jtxVisor.setFont(new Font("Arial", Font.PLAIN, 24));
+        jtxVisor.setHorizontalAlignment(JTextField.RIGHT);
         jtxVisor.setEditable(false);
         painelVisor.add(jtxVisor);
+        painel.add(painelVisor, BorderLayout.NORTH);
         
-        // Painel Botões
-        painelBotoes.setLayout(new GridLayout(5,5,1,1));
+        // ------ Painel Botões ------ 
+        painelBotoes.setLayout(new GridLayout(5,5,3,3));
         for(int i=0; i<25; i++){
             painelBotoes.add(jbBotoes[i]);
         }
-            
+        for(int i=0; i<25;i++){
+            jbBotoes[i].setFont(new Font("Arial", Font.PLAIN, 18));
+        }
+        painel.add(painelBotoes,BorderLayout.CENTER);
+       
         
-        
-        painel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        painel.add(painelVisor);
-        painel.add(painelBotoes);
     }
 }
