@@ -14,9 +14,11 @@ public class TelaCalculadora extends JFrame{
     private JButton[] jbBotoes;
     // Atributos para calcular
     private boolean operadorDigitado = false;
+    private String texto = "";
     private String valorString ="";
     private double valor1 = 0;
     private double valor2 = 0;
+    private double resultado = 0;
     private String operador = "";
 
    
@@ -45,7 +47,7 @@ public class TelaCalculadora extends JFrame{
         setSize(500,350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
-        setLocation(1200,100);
+        setLocation(800,100);
         add(painel);
         configurarPainel();
     }
@@ -76,62 +78,124 @@ public class TelaCalculadora extends JFrame{
 
         
         // Ações dos botoes
-        jbBotoes[0].addActionListener(e->{ // AC/C
+        jbBotoes[0].addActionListener(e-> { // AC/C
 
-        });
-        jbBotoes[1].addActionListener(e->{ // +/-
+        }); // AC/C
+        jbBotoes[1].addActionListener(e-> { // +/-
 
-        });
-        jbBotoes[2].addActionListener(e->{ // %
+        }); // +/-
+        jbBotoes[2].addActionListener(e-> { // %
 
-        });
-        jbBotoes[3].addActionListener(e->{ // RAIZ Q
+        }); // %
+        jbBotoes[3].addActionListener(e-> { // RAIZ Q
 
-        });
+        }); // RAIZ Q
         jbBotoes[4].addActionListener(e-> { // /
-            operador = "/";
-            valor1 = Double.parseDouble(valorString)
-            adicionarDigito("/")
-        });
-        jbBotoes[5].addActionListener(e-> adicionarDigito("7"));
-        jbBotoes[6].addActionListener(e-> adicionarDigito("8"));
-        jbBotoes[7].addActionListener(e-> adicionarDigito("9"));
-        jbBotoes[8].addActionListener(e->{ // x^Y
+            pressionaOperadorSimples("/");
+        }); // /
+        jbBotoes[5].addActionListener(e-> { // 7
+            pressionaNumero("7");
+        }); // 7
+        jbBotoes[6].addActionListener(e-> { // 8
+            pressionaNumero("8");
+        }); // 8
+        jbBotoes[7].addActionListener(e-> { // 9
+            pressionaNumero("9");
+        }); // 9
+        jbBotoes[8].addActionListener(e-> { // x^Y
 
-        });
-        jbBotoes[9].addActionListener(e-> adicionarDigito("*"));
-        jbBotoes[10].addActionListener(e-> adicionarDigito("4"));
-        jbBotoes[11].addActionListener(e-> adicionarDigito("5"));
-        jbBotoes[12].addActionListener(e-> adicionarDigito("6"));
+        }); // x^Y
+        jbBotoes[9].addActionListener(e-> { // *
+            pressionaOperadorSimples("*");
+        }); // *
+        jbBotoes[10].addActionListener(e->{ // 4
+            pressionaNumero("4");
+        }); // 4
+        jbBotoes[11].addActionListener(e->{ // 5
+            pressionaNumero("5");
+        }); // 5
+        jbBotoes[12].addActionListener(e->{ // 6
+            pressionaNumero("6");
+        }); // 6
         jbBotoes[13].addActionListener(e->{ // x^2
 
-        });
-        jbBotoes[14].addActionListener(e-> adicionarDigito("-"));
-        jbBotoes[15].addActionListener(e-> adicionarDigito("1"));
-        jbBotoes[16].addActionListener(e-> adicionarDigito("2"));
-        jbBotoes[17].addActionListener(e-> adicionarDigito("3"));
+        }); // x^2
+        jbBotoes[14].addActionListener(e->{ // -
+            pressionaOperadorSimples("-");
+        }); // -
+        jbBotoes[15].addActionListener(e->{ // 1
+            pressionaNumero("1");
+        }); // 1
+        jbBotoes[16].addActionListener(e->{ // 2
+            pressionaNumero("2");
+        }); // 2
+        jbBotoes[17].addActionListener(e->{ // 3
+            pressionaNumero("3");
+        }); // 3
         jbBotoes[18].addActionListener(e->{ // x^3
 
-        });
-        jbBotoes[19].addActionListener(e-> adicionarDigito("+"));
-        jbBotoes[20].addActionListener(e-> adicionarDigito("0"));
-        jbBotoes[21].addActionListener(e-> adicionarDigito("."));
+        }); // x^3
+        jbBotoes[19].addActionListener(e->{ // +
+            pressionaOperadorSimples("+");
+        }); // +
+        jbBotoes[20].addActionListener(e->{ // 0
+            pressionaNumero("0");
+        }); // 0
+        jbBotoes[21].addActionListener(e->{ // .
+            pressionaNumero(".");
+        }); // .
         jbBotoes[22].addActionListener(e->{ // X!
 
-        });
+        }); // X!
         jbBotoes[23].addActionListener(e->{ // 10^X
 
-        });
+        }); // 10^X
         jbBotoes[24].addActionListener(e->{ // =
-
-        });
+            valor2 = Double.parseDouble(valorString); // Converte o segundo numero
+            valor1 = calcular(valor1, valor2, operador); // Calcula a operação
+            texto = String.valueOf(valor1); // Converte resultado em String
+            valorString = texto; // copia para fazer proxima conta
+            jtxVisor.setText(texto); // Exibe na tela
+            valor2 = 0; // Zera o valor2
+            operador = ""; // Limpa operador
+            
+            operadorDigitado = false;
+        }); // =
        
         
     }
-    
-    public void adicionarDigito(String digito){
-        jtxVisor.setText(jtxVisor.getText() + digito);
+    private void pressionaNumero(String str){
+        // se digitar numeros ou .
+        texto += str; // Concatena str ao texto
+        jtxVisor.setText(texto); // exibe o texto
+        valorString += str; // Concatena str ao valorString
     }
-
-
+    private void pressionaOperadorSimples(String str){
+        // se digitar operador simples +,-,*,/
+        operador = str;
+        texto += str; // concatena o texto
+        jtxVisor.setText(texto); // exibe o texto
+        valor1 = Double.parseDouble(valorString);
+        valorString = "";
+        operadorDigitado = true;
+        // Desativar botoes operadores
+    }
+    private double calcular(Double valor1, Double valor2,String str){
+        double resultado = 0;
+        switch(str){
+            case "+":
+                resultado = valor1 + valor2;
+                break;
+            case "-":
+                resultado = valor1 - valor2;
+                break;
+            case "*":
+                resultado = valor1 * valor2;
+                break;
+            case "/":
+                resultado = valor1 / valor2;
+                break;
+        }
+        return resultado;
+    }
 }
