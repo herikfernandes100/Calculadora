@@ -86,7 +86,7 @@ public class TelaCalculadora extends JFrame {
 
         // AC/C 
         jbBotoes[0].addActionListener(e -> {
-            if (texto.isEmpty()) {
+            if (texto.isEmpty()) { // Verifica se está vazia
                 // Reseta tudo
                 texto = "";
                 valorString = "";
@@ -96,7 +96,7 @@ public class TelaCalculadora extends JFrame {
                 jtxVisor.setText("");
             } else {
                 if (texto.endsWith(" RAIZ Q")) {
-                    texto = texto.substring(0, texto.length() - 6);
+                    texto = texto.substring(0, texto.length() - 7);
                     operador = "";
                 } else if (texto.endsWith("^2")) {
                     texto = texto.substring(0, texto.length() - 2);
@@ -164,13 +164,8 @@ public class TelaCalculadora extends JFrame {
 
         // Fatorial
         jbBotoes[22].addActionListener(e -> {
-            if (!valorString.isEmpty()) {
-                valor1 = Double.parseDouble(valorString);
-                valor1 = fatorial(valor1);
-                texto = String.valueOf(valor1);
-                valorString = texto;
-                jtxVisor.setText(texto);
-            }
+            pressionaOperadorSimples("!");
+            valorString = "0";
         });
 
         // 10^X
@@ -186,18 +181,14 @@ public class TelaCalculadora extends JFrame {
 
         // Botão =
         jbBotoes[24].addActionListener(e -> {
-            try {
-                valor2 = Double.parseDouble(valorString);
-                valor1 = calcular(valor1, valor2, operador);
-                texto = String.valueOf(valor1);
-                valorString = texto;
-                jtxVisor.setText(texto);
-                valor2 = 0;
-                operador = "";
-                operadorDigitado = false;
-            } catch (Exception ex) {
-                jtxVisor.setText("Erro");
-            }
+            valor2 = Double.parseDouble(valorString);
+            valor1 = calcular(valor1, valor2, operador);
+            texto = String.valueOf(valor1);
+            valorString = texto;
+            jtxVisor.setText(texto);
+            valor2 = 0;
+            operador = "";
+            operadorDigitado = false;
         });
     }
 
@@ -211,12 +202,16 @@ public class TelaCalculadora extends JFrame {
     }
 
     private void pressionaOperadorSimples(String str){
-        operador = str;
-        texto += str;
+        operador = str; // Atualizo operador
+        valor1 = Double.parseDouble(valorString); // Converte para double
+        texto += str; // Atualiza texto
         jtxVisor.setText(texto);
-        valor1 = Double.parseDouble(valorString);
-        valorString = "";
+        valorString = "0";
         operadorDigitado = true;
+    }
+    private void pressionaOperadorEspecial(String str){
+        operador = str;
+        valor1 = Double.parseDouble(valorString);
     }
 
     private double calcular(Double valor1, Double valor2, String str){
@@ -249,6 +244,9 @@ public class TelaCalculadora extends JFrame {
                 break;
             case " RAIZ Q":
                 resultado = Math.sqrt(valor1);
+                break;
+            case "!":
+                resultado = fatorial(valor1);
                 break;
         }
         return resultado;
