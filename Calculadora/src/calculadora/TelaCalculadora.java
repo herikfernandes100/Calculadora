@@ -106,31 +106,19 @@ public class TelaCalculadora extends JFrame {
         // Outros
         jbBotoes[0].addActionListener(e -> { // AC/C 
             if (texto.isEmpty()){ // Verifica se está vazia
-                // Reseta tudo
-                texto = "";
-                valorString = "";
-                valor1 = 0;
-                valor2 = 0;
-                operador = "";
-                jtxVisor.setText("");
+                apagarTudo();
             }else if(apagar){ // Verifica se ja apagou ultimo
-                // Reseta tudo
-                texto = "";
-                valorString = "";
-                valor1 = 0;
-                valor2 = 0;
-                operador = "";
-                jtxVisor.setText("");
+                apagarTudo();
             }else{
-                if (texto.startsWith("RAIZ Q(")) {
+                if (operador.equals("RAIZ Q(")) {
                     texto = texto.substring(7, texto.length() - 1);
-                }else if (texto.startsWith("10^")){
+                }else if (operador.equals("10^")){
                     texto = texto.substring(3);
-                } else if (texto.endsWith("^2")) {
+                } else if (operador.equals("^2")) {
                     texto = texto.substring(0, texto.length() - 2);
-                } else if (texto.endsWith("^3")) {
+                } else if (operador.equals("^3")) {
                     texto = texto.substring(0, texto.length() - 2);
-                } else if (texto.endsWith("^")) {
+                } else if (operador.equals("^")) {
                     texto = texto.substring(0, texto.length() - 1);
                 } else {
                     texto = texto.substring(0, texto.length() - 1);
@@ -138,6 +126,8 @@ public class TelaCalculadora extends JFrame {
                         valorString = valorString.substring(0, valorString.length() - 1);
                     }
                 }
+                operador = ""; // Reseta Operador
+                valorString = String.valueOf(valor1);
                 jtxVisor.setText(texto);
                 apagar = true;
             }
@@ -186,18 +176,17 @@ public class TelaCalculadora extends JFrame {
     }
 
     private void pressionaNumero(String str){
-        texto.concat(str); // Concatena texto 
+        texto = texto.concat(str); // Concatena texto 
         jtxVisor.setText(texto); // Exibe o texto
-        valorString.concat(str); // Concatena valorString
+        valorString = valorString.concat(str); // Concatena valorString
         apagar = false; // reseta estado do apagar
     }
     private void pressionaOperador(String str){
+        texto = texto.concat(str); // Concatena texto 
+        jtxVisor.setText(texto); // Exibe o texto
         operador = str; // Atualizo operador
         valor1 = Double.parseDouble(valorString); // Converte para double
         valorString = "0"; // Reseta Valor String
-        texto += str; // Atualiza texto
-        jtxVisor.setText(texto); // Exibe o texto
-        clicavel = true;
         apagar = false;
     }
     private void pressionaOperadorEspecial(String str){
@@ -256,5 +245,14 @@ public class TelaCalculadora extends JFrame {
     }
     private void travarOperador(boolean clicavel){
         jbBotoes[19].setEnabled(clicavel);
+    }
+    private void apagarTudo(){
+        // Apaga tudo
+        texto = "";
+        valorString = "";
+        valor1 = 0;
+        valor2 = 0;
+        operador = "";
+        jtxVisor.setText("");
     }
 }
