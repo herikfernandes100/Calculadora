@@ -62,10 +62,9 @@ public class TelaCalculadora extends JFrame {
 
         // Números
         jbBotoes[20].addActionListener(e->{ // 0
-            if(valorString.equals("0")){ // Se valorString for 0
-                return;
+            if (!valorString.equals("0") && !texto.endsWith("0")){
+                pressionaNumero("0");
             }
-            pressionaNumero("0"); 
         });    
         jbBotoes[15].addActionListener(e->{ pressionaNumero("1"); });
         jbBotoes[16].addActionListener(e->{ pressionaNumero("2"); });
@@ -213,6 +212,7 @@ public class TelaCalculadora extends JFrame {
             case "-":valor1 = valor1 - valor2;
                 break;
             case "*":valor1 = valor1 * valor2;
+                break;
             case "/":
                 if (valor2 == 0) {
                     JOptionPane.showMessageDialog(this, "Divisão por zero!");
