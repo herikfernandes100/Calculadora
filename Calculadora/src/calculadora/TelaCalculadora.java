@@ -14,6 +14,7 @@ public class TelaCalculadora extends JFrame{
     private JButton[] jbBotoes;
     // Atributos para calcular
     private boolean operadorDigitado = false;
+    private boolean apagar = false;
     private String texto = "";
     private String valorString ="";
     private double valor1 = 0;
@@ -44,7 +45,7 @@ public class TelaCalculadora extends JFrame{
     public void configurarJanela(){
         setVisible(true);
         setTitle("Calculadora");
-        setSize(500,350);
+        setSize(520,350);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
         setLocation(800,100);
@@ -77,52 +78,10 @@ public class TelaCalculadora extends JFrame{
         painel.add(painelBotoes,BorderLayout.CENTER);
 
         
-        // Ações dos botoes
-        jbBotoes[0].addActionListener(e-> { // AC/C
-
-        }); // AC/C
-        jbBotoes[1].addActionListener(e-> { // +/-
-
-        }); // +/-
-        jbBotoes[2].addActionListener(e-> { // %
-
-        }); // %
-        jbBotoes[3].addActionListener(e-> { // RAIZ Q
-
-        }); // RAIZ Q
-        jbBotoes[4].addActionListener(e-> { // /
-            pressionaOperadorSimples("/");
-        }); // /
-        jbBotoes[5].addActionListener(e-> { // 7
-            pressionaNumero("7");
-        }); // 7
-        jbBotoes[6].addActionListener(e-> { // 8
-            pressionaNumero("8");
-        }); // 8
-        jbBotoes[7].addActionListener(e-> { // 9
-            pressionaNumero("9");
-        }); // 9
-        jbBotoes[8].addActionListener(e-> { // x^Y
-
-        }); // x^Y
-        jbBotoes[9].addActionListener(e-> { // *
-            pressionaOperadorSimples("*");
-        }); // *
-        jbBotoes[10].addActionListener(e->{ // 4
-            pressionaNumero("4");
-        }); // 4
-        jbBotoes[11].addActionListener(e->{ // 5
-            pressionaNumero("5");
-        }); // 5
-        jbBotoes[12].addActionListener(e->{ // 6
-            pressionaNumero("6");
-        }); // 6
-        jbBotoes[13].addActionListener(e->{ // x^2
-
-        }); // x^2
-        jbBotoes[14].addActionListener(e->{ // -
-            pressionaOperadorSimples("-");
-        }); // -
+        // --------------------- Números --------------------- 
+        jbBotoes[20].addActionListener(e->{ // 0
+            pressionaNumero("0");
+        }); // 0
         jbBotoes[15].addActionListener(e->{ // 1
             pressionaNumero("1");
         }); // 1
@@ -132,20 +91,101 @@ public class TelaCalculadora extends JFrame{
         jbBotoes[17].addActionListener(e->{ // 3
             pressionaNumero("3");
         }); // 3
-        jbBotoes[18].addActionListener(e->{ // x^3
-
-        }); // x^3
-        jbBotoes[19].addActionListener(e->{ // +
-            pressionaOperadorSimples("+");
-        }); // +
-        jbBotoes[20].addActionListener(e->{ // 0
-            pressionaNumero("0");
-        }); // 0
+        jbBotoes[10].addActionListener(e->{ // 4
+            pressionaNumero("4");
+        }); // 4
+        jbBotoes[11].addActionListener(e->{ // 5
+            pressionaNumero("5");
+        }); // 5
+        jbBotoes[12].addActionListener(e->{ // 6
+            pressionaNumero("6");
+        }); // 6
+        jbBotoes[5].addActionListener(e-> { // 7
+            pressionaNumero("7");
+        }); // 7
+        jbBotoes[6].addActionListener(e-> { // 8
+            pressionaNumero("8");
+        }); // 8
+        jbBotoes[7].addActionListener(e-> { // 9
+            pressionaNumero("9");
+        }); // 9
         jbBotoes[21].addActionListener(e->{ // .
             pressionaNumero(".");
         }); // .
-        jbBotoes[22].addActionListener(e->{ // X!
+        
+        // ------------------- Operações Básicas  ------------------- 
+        jbBotoes[19].addActionListener(e->{ // +
+            pressionaOperadorSimples("+");
+        }); // +
+        jbBotoes[14].addActionListener(e->{ // -
+            pressionaOperadorSimples("-");
+        }); // -
+        jbBotoes[9].addActionListener(e-> { // *
+            pressionaOperadorSimples("*");
+        }); // *
+        jbBotoes[4].addActionListener(e-> { // /
+            pressionaOperadorSimples("/");
+        }); // /
+        
+        // ------------------- Operações Especiais  ------------------- 
+        jbBotoes[0].addActionListener(e-> { // AC/C
+            if(!texto.equals("")){
+                switch(operador){
+                    case "C":
+                        valorString = "";
+                        texto = "";
+                        break;
+                    case " RAIZ Q":
+                        texto = texto.substring(0,texto.length() - 7);
+                        break;
+                    case "^2":
+                        texto = texto.substring(0,texto.length() - 2);
+                        break;
+                    case "^3":
+                        texto = texto.substring(0,texto.length() - 3);
+                        break;
+                    case "=":
+                        texto = "";
+                        break;
+                    default:
+                        texto = texto.substring(0,texto.length() - 1);
+                        break;
+                    
+                }
+                jtxVisor.setText(texto);
+                operador = "C";
+            }
+            
+            
+            
+        }); // AC/C
+        jbBotoes[1].addActionListener(e-> { // +/-
+            double numero = Double.parseDouble(texto);
+            numero *= -1;
+            texto = String.valueOf(numero);
+            jtxVisor.setText(texto);
+            
+        }); // +/-
+        jbBotoes[2].addActionListener(e-> { // %
 
+        }); // %
+        jbBotoes[3].addActionListener(e-> { // RAIZ Q
+            pressionaOperadorSimples(" RAIZ Q");
+            valorString = "0";
+        }); // RAIZ Q
+        jbBotoes[13].addActionListener(e->{ // x^2
+            pressionaOperadorSimples("^2");
+            valorString = "0";
+        }); // x^2
+        jbBotoes[18].addActionListener(e->{ // x^3
+            pressionaOperadorSimples("^3");
+            valorString = "0";
+        }); // x^3
+        jbBotoes[8].addActionListener(e-> { // x^Y
+            pressionaOperadorSimples("^");
+        }); // x^Y
+        jbBotoes[22].addActionListener(e->{ // X!
+            valorString = "0";
         }); // X!
         jbBotoes[23].addActionListener(e->{ // 10^X
 
@@ -162,10 +202,12 @@ public class TelaCalculadora extends JFrame{
             operadorDigitado = false;
         }); // =
        
-        
     }
     private void pressionaNumero(String str){
         // se digitar numeros ou .
+        if(operador.equals("C")){// Apaga operador (se for C)
+            operador = "";
+        } 
         texto += str; // Concatena str ao texto
         jtxVisor.setText(texto); // exibe o texto
         valorString += str; // Concatena str ao valorString
@@ -194,6 +236,18 @@ public class TelaCalculadora extends JFrame{
                 break;
             case "/":
                 resultado = valor1 / valor2;
+                break;
+            case "^2":
+                resultado = Math.pow(valor1, 2);
+                break;
+            case "^3":
+                resultado = Math.pow(valor1, 3);
+                break;
+            case "^":
+                resultado = Math.pow(valor1, valor2);
+                break;
+            case " RAIZ Q":
+                resultado = Math.sqrt(valor1);
                 break;
         }
         return resultado;
