@@ -13,6 +13,7 @@ public class TelaCalculadora extends JFrame {
     private String[] simbolos = {"AC/C","+/-","%","RAIZ Q","/","7","8","9","x^Y","*","4","5","6","x^2","-","1","2","3","x^3","+","0",".","X!","10^X","="};
     private JButton[] jbBotoes;
     private boolean operadorDigitado = false;
+    private boolean apagar = false;
     private String texto = "";
     private String valorString = "";
     private double valor1 = 0;
@@ -71,9 +72,9 @@ public class TelaCalculadora extends JFrame {
         jbBotoes[6].addActionListener(e->{ pressionaNumero("8"); });
         jbBotoes[7].addActionListener(e->{ pressionaNumero("9"); });
 
-        // "." com verificação
+        // Ponto .
         jbBotoes[21].addActionListener(e -> {
-            if (!valorString.contains(".")) {
+            if (!valorString.contains(".")) { // Verifica se já tem ponto
                 pressionaNumero(".");
             }
         });
@@ -84,9 +85,9 @@ public class TelaCalculadora extends JFrame {
         jbBotoes[9].addActionListener(e->{ pressionaOperadorSimples("*"); });
         jbBotoes[4].addActionListener(e->{ pressionaOperadorSimples("/"); });
 
-        // AC/C 
-        jbBotoes[0].addActionListener(e -> {
-            if (texto.isEmpty()) { // Verifica se está vazia
+        
+        jbBotoes[0].addActionListener(e -> { // AC/C 
+            if (texto.isEmpty()){ // Verifica se está vazia
                 // Reseta tudo
                 texto = "";
                 valorString = "";
@@ -94,19 +95,25 @@ public class TelaCalculadora extends JFrame {
                 valor2 = 0;
                 operador = "";
                 jtxVisor.setText("");
-            } else {
-                if (texto.endsWith(" RAIZ Q")) {
-                    texto = texto.substring(0, texto.length() - 7);
-                    operador = "";
+            }else if(apagar){ // Verifica se ja apagou ultimo
+                // Reseta tudo
+                texto = "";
+                valorString = "";
+                valor1 = 0;
+                valor2 = 0;
+                operador = "";
+                jtxVisor.setText("");
+            }else{
+                if (texto.startsWith("RAIZ Q(")) {
+                    texto = texto.substring(7, texto.length() - 1);
+                }else if (texto.startsWith("10^")){
+                    texto = texto.substring(3);
                 } else if (texto.endsWith("^2")) {
                     texto = texto.substring(0, texto.length() - 2);
-                    operador = "";
                 } else if (texto.endsWith("^3")) {
                     texto = texto.substring(0, texto.length() - 2);
-                    operador = "";
                 } else if (texto.endsWith("^")) {
                     texto = texto.substring(0, texto.length() - 1);
-                    operador = "";
                 } else {
                     texto = texto.substring(0, texto.length() - 1);
                     if (!valorString.isEmpty()) {
@@ -114,10 +121,10 @@ public class TelaCalculadora extends JFrame {
                     }
                 }
                 jtxVisor.setText(texto);
+                apagar = true;
             }
-});
-
-        // +/-
+            
+        }); // AC/C 
         jbBotoes[1].addActionListener(e -> {
             if (!valorString.isEmpty()) {
                 double numero = Double.parseDouble(valorString);
@@ -126,9 +133,7 @@ public class TelaCalculadora extends JFrame {
                 texto = valorString;
                 jtxVisor.setText(texto);
             }
-        });
-
-        // Porcentagem
+        }); // +/-
         jbBotoes[2].addActionListener(e -> {
             if (!valorString.isEmpty()) {
                 double numero = Double.parseDouble(valorString);
@@ -137,49 +142,33 @@ public class TelaCalculadora extends JFrame {
                 texto = valorString;
                 jtxVisor.setText(texto);
             }
-        });
-
-        // Raiz quadrada
+        }); // Porcentagem
         jbBotoes[3].addActionListener(e -> {
-            pressionaOperadorSimples(" RAIZ Q");
+            pressionaOperadorEspecial("RAIZ Q(");
+            texto = texto.concat(")");
+            jtxVisor.setText(texto); // Exibe o texto
             valorString = "0";
-        });
-
-        // Potência de 2
+        }); // Raiz quadrada
         jbBotoes[13].addActionListener(e -> {
             pressionaOperadorSimples("^2");
             valorString = "0";
-        });
-
-        // Potência de 3
+        }); // Potência de 2
         jbBotoes[18].addActionListener(e -> {
             pressionaOperadorSimples("^3");
             valorString = "0";
-        });
-
-        // Potência x^y
+        }); // Potência de 3
         jbBotoes[8].addActionListener(e -> {
             pressionaOperadorSimples("^");
-        });
-
-        // Fatorial
+        }); // Potência x^y
         jbBotoes[22].addActionListener(e -> {
             pressionaOperadorSimples("!");
             valorString = "0";
-        });
-
-        // 10^X
+        }); // Fatorial
         jbBotoes[23].addActionListener(e -> {
-            if (!valorString.isEmpty()) {
-                valor1 = Double.parseDouble(valorString);
-                valor1 = Math.pow(10, valor1);
-                texto = String.valueOf(valor1);
-                valorString = texto;
-                jtxVisor.setText(texto);
-            }
-        });
-
-        // Botão =
+            pressionaOperadorEspecial("10^");
+            jtxVisor.setText(texto); // Exibe o texto
+            valorString = "0";
+        }); // 10^X
         jbBotoes[24].addActionListener(e -> {
             valor2 = Double.parseDouble(valorString);
             valor1 = calcular(valor1, valor2, operador);
@@ -189,69 +178,71 @@ public class TelaCalculadora extends JFrame {
             valor2 = 0;
             operador = "";
             operadorDigitado = false;
-        });
+            apagar = false;
+        }); // =
     }
 
     private void pressionaNumero(String str){
-        if(operador.equals("C")){
-            operador = "";
-        } 
         texto += str;
         jtxVisor.setText(texto);
         valorString += str;
+        apagar = false;
     }
-
     private void pressionaOperadorSimples(String str){
         operador = str; // Atualizo operador
         valor1 = Double.parseDouble(valorString); // Converte para double
+        valorString = "0"; // Reseta Valor String
         texto += str; // Atualiza texto
-        jtxVisor.setText(texto);
-        valorString = "0";
+        jtxVisor.setText(texto); // Exibe o texto
         operadorDigitado = true;
+        apagar = false;
     }
     private void pressionaOperadorEspecial(String str){
-        operador = str;
-        valor1 = Double.parseDouble(valorString);
+        operador = str; // Atualizo operador
+        valor1 = Double.parseDouble(valorString);// Converte para double
+        valorString = "0"; // Reseta Valor String
+        texto = str.concat(texto);
+        apagar = false;
     }
-
     private double calcular(Double valor1, Double valor2, String str){
-        double resultado = 0;
         switch(str){
             case "+":
-                resultado = valor1 + valor2;
+                valor1 = valor1 + valor2;
                 break;
             case "-":
-                resultado = valor1 - valor2;
+                valor1 = valor1 - valor2;
                 break;
             case "*":
-                resultado = valor1 * valor2;
+                valor1 = valor1 * valor2;
                 break;
             case "/":
                 if (valor2 == 0) {
                     JOptionPane.showMessageDialog(this, "Divisão por zero!");
                     return 0;
                 }
-                resultado = valor1 / valor2;
+                valor1 = valor1 / valor2;
                 break;
             case "^2":
-                resultado = Math.pow(valor1, 2);
+                valor1 = Math.pow(valor1, 2);
                 break;
             case "^3":
-                resultado = Math.pow(valor1, 3);
+                valor1 = Math.pow(valor1, 3);
                 break;
             case "^":
-                resultado = Math.pow(valor1, valor2);
+                valor1 = Math.pow(valor1, valor2);
                 break;
-            case " RAIZ Q":
-                resultado = Math.sqrt(valor1);
+            case "RAIZ Q(":
+                valor1 = Math.sqrt(valor1);
                 break;
             case "!":
-                resultado = fatorial(valor1);
+                valor1 = fatorial(valor1);
+                break;
+            case "10^":
+                valor1 = Math.pow(10, valor1);
                 break;
         }
-        return resultado;
+        return valor1;
     }
-
     private double fatorial(double n) {
         if (n < 0 || n != (int)n) {
             JOptionPane.showMessageDialog(this, "Fatorial só é válido para inteiros não negativos.");
