@@ -61,7 +61,12 @@ public class TelaCalculadora extends JFrame {
         painel.add(painelBotoes,BorderLayout.CENTER);
 
         // Números
-        jbBotoes[20].addActionListener(e->{ pressionaNumero("0"); });
+        jbBotoes[20].addActionListener(e->{ // 0
+            if(valorString.equals("0")){ // Se valorString for 0
+                return;
+            }
+            pressionaNumero("0"); 
+        });    
         jbBotoes[15].addActionListener(e->{ pressionaNumero("1"); });
         jbBotoes[16].addActionListener(e->{ pressionaNumero("2"); });
         jbBotoes[17].addActionListener(e->{ pressionaNumero("3"); });
@@ -176,6 +181,10 @@ public class TelaCalculadora extends JFrame {
     }
 
     private void pressionaNumero(String str){
+        if(valorString.equals("0")){
+            valorString = "";
+            texto.substring(0, texto.length() - 1);
+        }
         texto = texto.concat(str); // Concatena texto 
         jtxVisor.setText(texto); // Exibe o texto
         valorString = valorString.concat(str); // Concatena valorString
