@@ -62,9 +62,10 @@ public class TelaCalculadora extends JFrame {
 
         // Números
         jbBotoes[20].addActionListener(e->{ // 0
-            if (!valorString.equals("0") && !texto.endsWith("0")){
+            if (!(valorString.equals("0") && texto.endsWith("0"))){
                 pressionaNumero("0");
             }
+            
         });    
         jbBotoes[15].addActionListener(e->{ pressionaNumero("1"); });
         jbBotoes[16].addActionListener(e->{ pressionaNumero("2"); });
@@ -137,7 +138,7 @@ public class TelaCalculadora extends JFrame {
             }
             
         }); // AC/C 
-        jbBotoes[1].addActionListener(e -> {
+        jbBotoes[1].addActionListener(e -> { // +/-
             if (!valorString.isEmpty()) {
                 double numero = Double.parseDouble(valorString);
                 numero *= -1;
@@ -146,29 +147,23 @@ public class TelaCalculadora extends JFrame {
                 jtxVisor.setText(texto);
             }
         }); // +/-
-        jbBotoes[3].addActionListener(e -> {
+        jbBotoes[3].addActionListener(e -> { // RAIZ Q
             pressionaOperadorEspecial("RAIZ Q(");
             texto = texto.concat(")");
             jtxVisor.setText(texto); // Exibe o texto
             valorString = "0";
-        }); // Raiz quadrada
+        }); // RAIZ Q
         jbBotoes[2].addActionListener(e -> { // %
-            if (!valorString.isEmpty()) {
-                double numero = Double.parseDouble(valorString);
-                numero /= 100;
-                valorString = String.valueOf(numero);
-                texto = valorString;
-                jtxVisor.setText(texto);
-            }
+            pressionaOperador("%");
         });  // %
-        jbBotoes[22].addActionListener(e -> {
+        jbBotoes[22].addActionListener(e -> {// !
             pressionaOperador("!");
             valorString = "0";
         }); // Fatorial
-        jbBotoes[24].addActionListener(e -> {
+        jbBotoes[24].addActionListener(e -> {// =
             valor2 = Double.parseDouble(valorString);
             valor1 = calcular(valor1, valor2, operador);
-            texto = String.valueOf(valor1);
+            texto = formatarNumero(valor1);
             valorString = texto;
             jtxVisor.setText(texto);
             valor2 = 0;
@@ -180,10 +175,10 @@ public class TelaCalculadora extends JFrame {
     }
 
     private void pressionaNumero(String str){
-        if(valorString.equals("0")){
-            valorString = "";
-            texto.substring(0, texto.length() - 1);
-        }
+        if (valorString.equals("0") && texto.endsWith("0")){
+                valorString = "";
+                texto = texto.substring(0, texto.length() - 1);
+            }
         texto = texto.concat(str); // Concatena texto 
         jtxVisor.setText(texto); // Exibe o texto
         valorString = valorString.concat(str); // Concatena valorString
@@ -238,6 +233,9 @@ public class TelaCalculadora extends JFrame {
             case "10^":
                 valor1 = Math.pow(10, valor1);
                 break;
+            case "%":
+                valor1 = (valor1/100)*valor2;
+                break;
         }
         return valor1;
     }
@@ -264,4 +262,12 @@ public class TelaCalculadora extends JFrame {
         operador = "";
         jtxVisor.setText("");
     }
+    private String formatarNumero(double numero) {
+    if (numero == (int) numero) {
+        return String.valueOf((int) numero); // Converte para int se for número inteiro
+    } else {
+        return String.valueOf(numero); // Mantém como double se tiver decimal
+    }
+}
+
 }
