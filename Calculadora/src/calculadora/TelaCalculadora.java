@@ -90,7 +90,7 @@ public class TelaCalculadora extends JFrame {
         jbBotoes[4].addActionListener(e->{ pressionaOperador("/"); });
         
         // Potências
-        jbBotoes[8].addActionListener(e -> {
+        jbBotoes[8].addActionListener(e -> {  // x^y
             pressionaOperador("^");
         });  // x^y
         jbBotoes[13].addActionListener(e -> { // x^2
@@ -183,6 +183,8 @@ public class TelaCalculadora extends JFrame {
         jtxVisor.setText(texto); // Exibe o texto
         valorString = valorString.concat(str); // Concatena valorString
         apagar = false; // reseta estado do apagar
+        System.out.println("texto.endsWith(0): " + texto.endsWith("0"));
+        System.out.println("valor String: " + valorString);
     }
     private void pressionaOperador(String str){
         texto = texto.concat(str); // Concatena texto 
@@ -210,10 +212,11 @@ public class TelaCalculadora extends JFrame {
                 break;
             case "/":
                 if (valor2 == 0) {
-                    JOptionPane.showMessageDialog(this, "Divisão por zero!");
                     valor1 = 0.0;
+                }else{
+                    valor1 =  valor1 / valor2;
                 }
-                valor1 =  valor1 / valor2;
+                
                 break;
             case "^2": 
                 valor1 = Math.pow(valor1, 2);
