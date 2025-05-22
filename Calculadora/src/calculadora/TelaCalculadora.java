@@ -52,7 +52,6 @@ public class TelaCalculadora extends JFrame {
         jtxVisor.setEditable(false);
         painelVisor.add(jtxVisor, BorderLayout.CENTER);
         painel.add(painelVisor, BorderLayout.NORTH);
-
         painelBotoes.setLayout(new GridLayout(5,5,3,3));
         for(int i=0; i<25; i++){ 
             painelBotoes.add(jbBotoes[i]);
